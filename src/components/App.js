@@ -1,41 +1,20 @@
 import React, { useState, useEffect } from "react";
 import SearchBar from "../components/SearchBar";
-import youtube from "../apis/youtube";
 import VideoList from "../components/VideoList";
 import VideoDetail from "../components/VideoDetail";
-
-const KEY = "AIzaSyDE5PA9LDLdkAzAnyWYSb1Ahp84zuoZqG4";
+import useVideos from "../hooks/useVideos";
 
 const App = () => {
-	const [videos, setVideo] = useState([]);
 	const [selectedVideo, setSelectedVideo] = useState(null);
+	const [videos, search] = useVideos("cats");
 
 	useEffect(() => {
-		onTermSubmit("cats");
-	}, []);
-
-	const onTermSubmit = async (term) => {
-		const response = await youtube.get("/search", {
-			params: {
-				q: term,
-				type: "video",
-				part: "snippet",
-				maxResults: 5,
-				key: KEY,
-			},
-		});
-
-		setVideo(response.data.items);
-		setSelectedVideo(response.data.items[0]);
-	};
-
-	const onVideoSelect = (video) => {
-		setSelectedVideo(video);
-	};
+		setSelectedVideo(videos[0]);
+	}, [videos]);
 
 	return (
 		<div className="ui container">
-			<SearchBar onFormSubmit={onTermSubmit}> </SearchBar>
+			<SearchBar onFormSubmit={search}> </SearchBar>
 			<div className="ui grid">
 				<div className="ui row">
 					<div className="eleven wide column">
@@ -43,7 +22,7 @@ const App = () => {
 					</div>
 					<div className="five wide column">
 						<VideoList
-							onVideoSelect={onVideoSelect}
+							onVideoSelect={setSelectedVideo}
 							videos={videos}
 						></VideoList>
 					</div>
