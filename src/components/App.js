@@ -6,7 +6,7 @@ import useVideos from "../hooks/useVideos";
 
 const App = () => {
 	const [selectedVideo, setSelectedVideo] = useState(null);
-	const [videos, search] = useVideos("cats");
+	const [videos, search] = useVideos("dogs");
 
 	useEffect(() => {
 		setSelectedVideo(videos[0]);
